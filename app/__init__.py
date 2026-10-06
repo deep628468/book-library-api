@@ -5,7 +5,6 @@ from app.config import Config
 
 db = SQLAlchemy()
 
-
 def create_app():
     
     app = Flask(__name__)
@@ -21,4 +20,7 @@ def create_app():
     def home():
         return "Book Library API is running"
 
+    @app.route("/health")
+    def health():
+        return {"status": "healthy"}, 200
     return app
