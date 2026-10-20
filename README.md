@@ -1,120 +1,133 @@
 # Book Library API
 
-A RESTful Book Library API built with **Flask, PostgreSQL, and SQLAlchemy**. The application provides CRUD operations for managing books, with input validation, error handling, environment-based configuration, and a service-layer architecture.
+A RESTful Book Library API built with **Flask, PostgreSQL, and SQLAlchemy**. The application supports CRUD operations for managing books, input validation, error handling, environment-based configuration, and a service-layer architecture.
+
+**Live API:** https://book-library-api-dsc2.onrender.com
+
+**GitHub Repository:** https://github.com/deep628468/book-library-api
 
 ## Features
 
-* Create a new book
-* Retrieve all books
-* Retrieve a book by ID
-* Update an existing book
-* Delete a book
-* Input validation for book data
-* Error handling for invalid requests and missing resources
-* PostgreSQL database integration
-* SQLAlchemy ORM
-* Service-layer architecture
-* Environment-based database configuration
-* API testing using cURL
+- Create, retrieve, update, and delete books
+- Retrieve all books or a specific book by ID
+- Input validation for book data
+- Error handling for invalid requests and missing resources
+- PostgreSQL database integration
+- SQLAlchemy ORM
+- Service-layer architecture
+- Environment-based database configuration
+- Docker containerization
+- Cloud deployment on Render
+- API testing using cURL
 
 ## Technologies Used
 
-* Python 3.13
-* Flask 3.1.3
-* Flask-SQLAlchemy 3.1.1
-* SQLAlchemy 2.0.52
-* PostgreSQL
-* psycopg2-binary
-* python-dotenv
-* cURL
-* Git and GitHub
+- Python 3.13
+- Flask
+- Flask-SQLAlchemy
+- SQLAlchemy
+- PostgreSQL
+- psycopg2-binary
+- python-dotenv
+- Docker
+- Gunicorn
+- cURL
+- Git and GitHub
+- Render
 
 ## Project Architecture
 
-The application follows a simple layered architecture:
+The application follows a layered architecture:
 
 ```text
 Client
-  │
-  ▼
+  |
+  v
 Flask Routes
-  │
-  ▼
+  |
+  v
 Service Layer
-  │
-  ▼
-SQLAlchemy Model
-  │
-  ▼
+  |
+  v
+SQLAlchemy Models
+  |
+  v
 PostgreSQL Database
 ```
 
 ### Responsibilities
 
-* **Routes:** Handle HTTP requests, input validation, and HTTP responses.
-* **Service Layer:** Handle database operations and application logic.
-* **Models:** Define the database structure using SQLAlchemy.
-* **Configuration:** Load environment-based application settings.
-* **PostgreSQL:** Store persistent book data.
+- **Routes:** Handle HTTP requests, input validation, and HTTP responses.
+- **Service Layer:** Manage database operations and application logic.
+- **Models:** Define the database structure using SQLAlchemy.
+- **Configuration:** Load application settings from environment variables.
+- **PostgreSQL:** Store book records persistently.
 
 ## Project Structure
 
 ```text
 book-library-api/
-│
 ├── app/
 │   ├── __init__.py
 │   ├── config.py
 │   ├── routes.py
-│   │
 │   ├── models/
 │   │   ├── __init__.py
 │   │   └── book.py
-│   │
 │   └── services/
 │       ├── __init__.py
 │       └── book_service.py
-│
 ├── .env
 ├── .env.example
 ├── .gitignore
 ├── requirements.txt
+├── Dockerfile
+├── docker-compose.yml
 ├── run.py
 └── README.md
 ```
 
-> The `.env` file contains local configuration and should not be committed to GitHub. Use `.env.example` as a template.
+The `.env` file contains local configuration and must not be committed to GitHub. Use `.env.example` as a template.
 
 ## API Endpoints
 
-| Method | Endpoint      | Description              |
-| ------ | ------------- | ------------------------ |
-| GET    | `/books`      | Retrieve all books       |
-| GET    | `/books/<id>` | Retrieve a specific book |
-| POST   | `/books`      | Create a new book        |
-| PUT    | `/books/<id>` | Update an existing book  |
-| DELETE | `/books/<id>` | Delete a book            |
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/health` | Check application health |
+| GET | `/books` | Retrieve all books |
+| GET | `/books/<id>` | Retrieve a book by ID |
+| POST | `/books` | Create a new book |
+| PUT | `/books/<id>` | Update an existing book |
+| DELETE | `/books/<id>` | Delete a book |
 
 ## API Usage
 
-### Get All Books
+The following examples use the deployed API. You can replace the base URL with `http://127.0.0.1:5001` when testing locally.
+
+### 1. Health Check
 
 ```bash
-curl http://127.0.0.1:5001/books
+curl -i https://book-library-api-dsc2.onrender.com/health
 ```
 
-### Get a Book by ID
+### 2. Retrieve All Books
 
 ```bash
-curl http://127.0.0.1:5001/books/10
+curl https://book-library-api-dsc2.onrender.com/books
 ```
 
-### Create a Book
+### 3. Retrieve a Book by ID
 
 ```bash
-curl -X POST http://127.0.0.1:5001/books \
--H "Content-Type: application/json" \
--d '{"title":"The Alchemist","author":"Paulo Coelho"}'
+curl -i https://book-library-api-dsc2.onrender.com/books/1
+```
+
+### 4. Create a Book
+
+```bash
+curl -X POST https://book-library-api-dsc2.onrender.com/books \
+  -H "Content-Type: application/json" \
+  -d '{"title":"The Alchemist","author":"Paulo Coelho"}'
 ```
 
 Example response:
@@ -122,32 +135,28 @@ Example response:
 ```json
 {
   "author": "Paulo Coelho",
-  "id": 10,
+  "id": 1,
   "title": "The Alchemist"
 }
 ```
 
-### Update a Book
+The returned ID is assigned by the database and may differ from this example.
+
+### 5. Update a Book
 
 ```bash
-curl -X PUT http://127.0.0.1:5001/books/10 \
--H "Content-Type: application/json" \
--d '{"title":"The Alchemist Updated","author":"Paulo Coelho"}'
+curl -X PUT https://book-library-api-dsc2.onrender.com/books/1 \
+  -H "Content-Type: application/json" \
+  -d '{"title":"The Alchemist Updated","author":"Paulo Coelho"}'
 ```
 
-### Delete a Book
+### 6. Delete a Book
 
 ```bash
-curl -X DELETE http://127.0.0.1:5001/books/10
+curl -i -X DELETE https://book-library-api-dsc2.onrender.com/books/1
 ```
 
-Example response:
-
-```json
-{
-  "message": "Book deleted successfully"
-}
-```
+Use an existing book ID when performing update or delete operations.
 
 ## Input Validation
 
@@ -155,14 +164,13 @@ The API validates incoming book data before passing it to the service layer.
 
 Validation includes:
 
-* Title is required
-* Author is required
-* Title must be a non-empty string
-* Author must be a non-empty string
-* Leading and trailing whitespace is removed
-* Invalid or missing data returns an HTTP `400` response
+- Title is required.
+- Author is required.
+- Title and author must be non-empty strings.
+- Leading and trailing whitespace is removed.
+- Invalid or missing data returns an HTTP `400 Bad Request` response.
 
-Example:
+Example invalid request:
 
 ```json
 {
@@ -171,7 +179,7 @@ Example:
 }
 ```
 
-Response:
+Example error response:
 
 ```json
 {
@@ -181,12 +189,26 @@ Response:
 
 ## Error Handling
 
-The API currently handles common errors including:
+The API handles common request errors.
 
-* `400 Bad Request` — invalid or missing request data
-* `404 Not Found` — requested book does not exist
+| Status Code | Meaning |
+|---|---|
+| `400 Bad Request` | Invalid or missing request data |
+| `404 Not Found` | Requested book does not exist |
+| `500 Internal Server Error` | Unexpected server-side error, if encountered |
 
-Example:
+Example: request a nonexistent book.
+
+```bash
+curl -i https://book-library-api-dsc2.onrender.com/books/999999
+```
+
+Verified response:
+
+```http
+HTTP/2 404
+content-type: application/json
+```
 
 ```json
 {
@@ -198,20 +220,22 @@ Example:
 
 The application uses environment variables for database configuration.
 
-Create a `.env` file in the project root:
+Create a `.env` file in the project root and configure your PostgreSQL connection:
 
 ```env
 DATABASE_URL=postgresql://username:password@localhost:5432/book_library
 ```
 
-The actual database credentials should remain in `.env` and should not be committed to GitHub.
+Replace the example credentials and database name with your actual local PostgreSQL configuration.
+
+Never publish real database credentials, API keys, or production connection strings.
 
 ## Installation
 
-Clone the repository and enter the project directory:
+Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/deep628468/book-library-api.git
 cd book-library-api
 ```
 
@@ -228,17 +252,17 @@ Install the dependencies:
 pip install -r requirements.txt
 ```
 
-Configure the PostgreSQL connection in `.env`.
+Configure PostgreSQL and the `DATABASE_URL` environment variable before starting the application.
 
-## Running the Application
+## Running Locally
 
-Start the Flask application:
+Start the application:
 
 ```bash
 python run.py
 ```
 
-The API will be available at:
+The local API is available at:
 
 ```text
 http://127.0.0.1:5001
@@ -250,36 +274,61 @@ Test the API:
 curl http://127.0.0.1:5001/books
 ```
 
+## Docker
+
+The application includes a `Dockerfile` and Docker Compose configuration for containerized execution.
+
+To start the application using Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+To stop the containers:
+
+```bash
+docker compose down
+```
+
+Configure the required environment variables before starting the containers. Database persistence and container behavior depend on the Docker Compose configuration.
+
+## Deployment
+
+The application is deployed on Render using Docker and Gunicorn, with PostgreSQL for persistent data storage.
+
+- **Live API:** https://book-library-api-dsc2.onrender.com
+- **Health Check:** https://book-library-api-dsc2.onrender.com/health
+- **Books Endpoint:** https://book-library-api-dsc2.onrender.com/books
+
+The deployment uses environment-based configuration for database connectivity.
+
 ## Testing
 
-The CRUD operations and validation/error-handling cases were tested using cURL.
+CRUD operations have been tested using cURL.
 
-Tested scenarios include:
+Testing scenarios include:
 
-* Retrieve all books
-* Retrieve an existing book
-* Retrieve a nonexistent book
-* Create a valid book
-* Reject invalid book data
-* Update an existing book
-* Reject invalid update data
-* Update a nonexistent book
-* Delete an existing book
-* Delete a nonexistent book
+- Retrieve all books
+- Retrieve an existing book
+- Create a book
+- Update an existing book
+- Delete an existing book
+- Request a nonexistent book and verify the `404 Not Found` response
+
+Additional validation and error-handling tests should be run whenever the application changes.
 
 ## Current Status
 
-The core REST API, PostgreSQL integration, CRUD functionality, input validation, service-layer architecture, and systematic API testing are complete.
-
-### Remaining Development
-
-* Final production configuration
-* Docker containerization
-* Production server configuration
-* Cloud deployment
-* Final security review
+- Flask REST API implemented
+- PostgreSQL integration completed
+- CRUD operations implemented and tested
+- Input validation and error handling implemented
+- Service-layer architecture implemented
+- Docker containerization completed
+- Application deployed on Render
+- GitHub repository synchronized
+- Nonexistent book ID handling verified
 
 ## License
 
-This project is currently intended for educational and portfolio purposes.
-
+This project is intended for educational and portfolio purposes. No formal open-source license has been specified.
