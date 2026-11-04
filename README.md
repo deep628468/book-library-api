@@ -294,13 +294,21 @@ Configure the required environment variables before starting the containers. Dat
 
 ## Deployment
 
-The application is deployed on Render using Docker and Gunicorn, with PostgreSQL for persistent data storage.
+The application was previously deployed on Render using Docker and Gunicorn.
 
-- **Live API:** https://book-library-api-dsc2.onrender.com
+The Render deployment is not currently being updated because the PostgreSQL database migration to Neon is paused due to a database connection issue.
+
+No recent local changes have been deployed to the live server.
+
+- **Previous Live API:** https://book-library-api-dsc2.onrender.com
 - **Health Check:** https://book-library-api-dsc2.onrender.com/health
-- **Books Endpoint:** https://book-library-api-dsc2.onrender.com/books
 
-The deployment uses environment-based configuration for database connectivity.
+### Deployment Status
+
+- Local API testing: Completed
+- Render deployment: Previously deployed
+- Neon database migration: Paused
+- Production database connectivity: Pending verification
 
 ## Testing
 
@@ -319,15 +327,25 @@ Additional validation and error-handling tests should be run whenever the applic
 
 ## Current Status
 
+### Completed
+
 - Flask REST API implemented
-- PostgreSQL integration completed
+- PostgreSQL integration with SQLAlchemy
 - CRUD operations implemented and tested
-- Input validation and error handling implemented
+- Input validation and error handling tested
 - Service-layer architecture implemented
-- Docker containerization completed
-- Application deployed on Render
-- GitHub repository synchronized
-- Nonexistent book ID handling verified
+- Docker container running and healthy
+- Local API health check passed
+- Missing-book error handling verified with HTTP 404
+- Git repository synchronized with origin/main
+
+### Pending
+
+- Final README documentation cleanup
+- Neon database migration and connectivity verification
+- Production deployment verification
+
+The local API functionality is complete and tested. The remaining work is documentation finalization and resolving the paused Neon database migration before resuming production deployment.
 
 ## License
 
